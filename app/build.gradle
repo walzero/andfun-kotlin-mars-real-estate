@@ -14,12 +14,13 @@
  * limitations under the License.
  *
  */
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
+}
 
 android {
     compileSdkVersion 30
@@ -31,7 +32,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"  
+        versionName "1.0"
     }
     buildTypes {
         release {
@@ -74,10 +75,10 @@ dependencies {
     implementation "com.squareup.moshi:moshi:$version_moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 
-    
+
     // Retrofit - Deprecated plugins - No more required
     // implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
-    // implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
+     implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
 
     // Retrofit with Moshi Converter
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"

@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
+import retrofit2.Retrofit
 
 /**
  * This fragment shows the the status of the Mars real-estate web services transaction.
