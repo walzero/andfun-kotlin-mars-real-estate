@@ -26,9 +26,11 @@ import retrofit2.http.GET
 
 private const val BASE_URL = "https://mars.udacity.com/"
 
-private val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+private val moshi by lazy {
+    Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+}
 
 private val retrofit by lazy {
     Retrofit.Builder()
@@ -40,7 +42,7 @@ private val retrofit by lazy {
 
 interface MarsApiService {
     @GET("realestate")
-    fun getProperties(): Call<List<MarsProperty>>
+    suspend fun getProperties(): List<MarsProperty>
 }
 
 object MarsApi {
