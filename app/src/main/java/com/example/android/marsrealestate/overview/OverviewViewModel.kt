@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
 
@@ -31,11 +32,8 @@ import kotlinx.coroutines.launch
  */
 class OverviewViewModel : ViewModel() {
 
-    // The internal MutableLiveData String that stores the status of the most recent request
-    private val _status = MutableLiveData<String>()
-
-    // The external immutable LiveData for the request status String
-    val status: LiveData<String>
+    private val _status = MutableLiveData<MarsApiStatus>()
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
     private val _properties = MutableLiveData<List<MarsProperty>>()
@@ -47,23 +45,33 @@ class OverviewViewModel : ViewModel() {
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
      */
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    private fun getMarsRealEstateProperties() {
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter) {
         viewModelScope.launch {
+            _status.value = MarsApiStatus.LOADING
             try {
-                val listResult = MarsApi.retrofitService.getProperties()
-
-                if(listResult.isNotEmpty())
-                    _properties.value = listResult
-
+                _properties.value = MarsApi.retrofitService.getProperties(filter.value)
+                _status.value = MarsApiStatus.DONE
             } catch (e: Exception) {
-                _status.value = "Failure: ${e.message}"
+                _status.value = MarsApiStatus.ERROR
+                _properties.value = ArrayList()
             }
         }
     }
+
+    /**
+     * Updates the data set filter for the web services by querying the data with the new filter
+     * by calling [getMarsRealEstateProperties]
+     * @param filter the [MarsApiFilter] that is sent as part of the web server request
+     */
+    fun updateFilter(filter: MarsApiFilter) {
+        getMarsRealEstateProperties(filter)
+    }
 }
+
+enum class MarsApiStatus { LOADING, ERROR, DONE }
